@@ -19,9 +19,11 @@ L.Icon.Default.mergeOptions({
 
 let drawnItems = null
 let map = null
+// -16.50251, -68.13223
 
 export function createMap () {
-  map = L.map('map').setView([0, 0], 2)
+  //map = L.map('map').setView([0, 0], 2)
+  map = L.map('map').setView(L.latLng(-16.50251,-68.13223), 12)
 
   const tiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',

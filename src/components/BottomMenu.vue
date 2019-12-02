@@ -1,13 +1,13 @@
 <template>
   <Row id="bottomMenu">
-    <Button class="pad" @click="copy">
+    <!-- <Button class="pad" @click="copy">
       Copy to clipboard
-    </Button>
+    </Button> -->
 
-    <ButtonGroup>
-      <Button @click="saveToGeojson">
-        Save as geojson
-      </Button>
+    <Button @click="saveToGeojson">
+      Save as geojson
+    </Button>
+    <!-- <ButtonGroup>
       <Dropdown trigger="click" placement="top-end" @on-click="saveInFormats">
         <a href="javascript:void(0)">
           <Button icon="arrow-up-b" />
@@ -18,7 +18,7 @@
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
-    </ButtonGroup>
+    </ButtonGroup> -->
   </Row>
 </template>
 
@@ -27,6 +27,7 @@ import FileSaver from 'file-saver'
 import { topology } from 'topojson-server'
 import wkt from 'wellknown'
 import shape from 'shp-write'
+import store from '../store'
 
 export default {
   name: 'BottomMenu',
@@ -63,10 +64,41 @@ export default {
 
     },
     saveToGeojson: function () {
-      var file = new File([this.code], "exported.geojson", {
-        type: "text/plain;charset=utf-8"
-      });
-      FileSaver.saveAs(file);
+      if (this.$store.getters.aditionalProps.length === 0 ) {
+        alert('you must fill at least a name for this route');
+        return;
+      }
+    
+      if (this.$store.getters.geojson.features.length === 1
+        && this.$store.getters.geojson.features[0].geometry.type === "LineString"
+      ) {
+        
+        let geoJsonObject = this.$store.getters.geojson;
+        let aditionalProps = this.$store.getters.aditionalProps;
+        geoJsonObject.features[0].properties = aditionalProps;
+        store.commit('setGeoJSON', geoJsonObject);
+
+        console.log("FINAL GEOJSON ");
+        console.log(this.$store.getters.geojson);
+
+        var file = new File([JSON.stringify(this.$store.getters.geojson)], "exported.geojson", {
+          type: "text/plain;charset=utf-8"
+        });
+        FileSaver.saveAs(file);
+        // var file = new File([this.code], "exported.geojson", {
+        //   type: "text/plain;charset=utf-8"
+        // });
+        // FileSaver.saveAs(file);
+
+        }
+        else {
+          alert('you must have one route drawed');
+          return;
+        }
+        
+
+        
+      // }
     },
     saveInFormats: function (e) {
       let outData = null

@@ -8,9 +8,10 @@ export default new Vuex.Store({
     requiresParseFixing: false,
     requiresWindingOrderFix: false,
     geojsonString: `{
-  "type": "FeatureCollection",
-  "features": []
-}`
+      "type": "FeatureCollection",
+      "features": []
+    }`,
+    aditionalProperties: {}
   },
   mutations: {
     setGeoJSON (state, newGeojson) {
@@ -29,6 +30,9 @@ export default new Vuex.Store({
     clearRequiresFixes (state) {
       state.requiresWindingOrderFix = false
       state.requiresParseFixing = false
+    },
+    addAditionalProp (state, newAditionalProps) {
+      state.aditionalProperties = newAditionalProps
     }
   },
   getters: {
@@ -42,6 +46,9 @@ export default new Vuex.Store({
       if (gj.type === 'Feature') return 1
       if (gj.type === 'Polygon' || gj.type === 'LineString') return 1
       return 0
+    },
+    aditionalProps: function (state) {
+      return state.aditionalProperties;
     }
   }
 })
